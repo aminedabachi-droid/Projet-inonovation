@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kazi — Posez vos affaires. Profitez de la mer.</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0a1628;
+  --ink2:#1e3a5f;
+  --muted:#6b7f96;
+  --light:#f5f0e8;
+  --sand:#ede0c4;
+  --sea:#0d7aaa;
+  --sea2:#1596cc;
+  --sky:#b8dff0;
+  --coral:#e8603a;
+  --cream:#fdfaf5;
+  --white:#fff;
+  --r:20px;
+}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--ink);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* ─── NAV ─── */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:999;
+  padding:0 3rem;height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:background .3s,box-shadow .3s;
+}
+#nav.solid{background:rgba(253,250,245,.92);backdrop-filter:blur(20px);box-shadow:0 1px 0 rgba(0,0,0,.06)}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:var(--ink);letter-spacing:-.03em;text-decoration:none}
+.nav-logo b{color:var(--coral)}
+.nav-links{display:flex;align-items:center;gap:2rem}
+.nav-links a{font-size:.875rem;color:var(--ink);opacity:.65;text-decoration:none;font-weight:400;transition:opacity .2s}
+.nav-links a:hover{opacity:1}
+.nav-cta{background:var(--ink);color:var(--white)!important;opacity:1!important;padding:.5rem 1.25rem;border-radius:100px;font-weight:500!important;transition:background .2s!important}
+.nav-cta:hover{background:var(--ink2)!important}
+
+/* ─── HERO ─── */
+#hero{
+  height:100vh;min-height:700px;
+  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  padding-bottom:12vh;
+}
+
+/* PARALLAX LAYERS */
+.pl{position:absolute;left:0;right:0;will-change:transform}
+
+/* Sky */
+.pl-sky{
+  top:0;height:100%;
+  background:linear-gradient(180deg,#a8d8f0 0%,#c8eaf8 30%,#ddf0f8 52%,#eef5e8 68%,#f5ecd8 82%,#f0ddb8 100%);
+  z-index:1;
+}
+
+/* Sun */
+.pl-sun{top:9%;right:13%;z-index:2;width:80px;height:80px}
+.sun-body{width:80px;height:80px;border-radius:50%;background:radial-gradient(circle at 42% 42%,#fff9c0,#ffe44d 45%,#ffc107 80%);box-shadow:0 0 50px 18px rgba(255,220,50,.3),0 0 100px 40px rgba(255,190,0,.12);animation:sunb 5s ease-in-out infinite}
+@keyframes sunb{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+
+/* Clouds */
+.pl-clouds{top:6%;z-index:3}
+.cl{position:absolute;border-radius:100px;background:rgba(255,255,255,.78);filter:blur(5px)}
+.cl1{width:180px;height:44px;top:12px;left:7%;animation:cd1 26s ease-in-out infinite}
+.cl2{width:120px;height:30px;top:28px;left:30%;animation:cd2 33s ease-in-out infinite}
+.cl3{width:100px;height:26px;top:8px;left:55%;animation:cd1 40s ease-in-out infinite 5s}
+.cl4{width:150px;height:38px;top:20px;left:74%;animation:cd2 28s ease-in-out infinite 2s}
+@keyframes cd1{0%,100%{transform:translateX(0)}50%{transform:translateX(28px)}}
+@keyframes cd2{0%,100%{transform:translateX(0)}50%{transform:translateX(-18px)}}
+
+/* Distant sea */
+.pl-horizon{bottom:30%;z-index:4}
+
+/* Mid sea */
+.pl-sea{bottom:18%;z-index:5}
+
+/* Waves */
+.pl-waves{bottom:14%;z-index:6}
+
+/* Sand */
+.pl-sand{bottom:0;z-index:7}
+
+/* Hero text */
+.hero-text{
+  position:relative;z-index:20;
+  text-align:center;
+  padding:0 2rem;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:rgba(255,255,255,.6);backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.85);
+  border-radius:100px;padding:.35rem 1rem;
+  font-size:.75rem;color:var(--ink2);font-weight:500;
+  margin-bottom:1.5rem;letter-spacing:.04em;
+}
+.ldot{width:7px;height:7px;background:#30d158;border-radius:50%;box-shadow:0 0 4px #30d158;animation:ld 2s infinite}
+@keyframes ld{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+
+.hero-h{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(3.5rem,8vw,6.8rem);
+  font-weight:800;line-height:.95;
+  letter-spacing:-.04em;
+  color:var(--ink);
+  text-shadow:0 2px 24px rgba(255,255,255,.5);
+  margin-bottom:1.4rem;
+}
+.hero-h em{font-style:normal;color:var(--coral)}
+.hero-sub{
+  font-size:1rem;color:var(--ink2);
+  max-width:420px;margin:0 auto 2.2rem;
+  font-weight:300;line-height:1.75;
+  text-shadow:0 1px 10px rgba(255,255,255,.6);
+}
+.hero-actions{display:flex;gap:.85rem;justify-content:center;flex-wrap:wrap}
+
+.btn-primary{
+  background:var(--ink);color:var(--white);
+  padding:.85rem 2rem;border-radius:100px;
+  font-size:.92rem;font-weight:500;
+  text-decoration:none;transition:all .22s;
+  box-shadow:0 6px 20px rgba(10,22,40,.2);
+}
+.btn-primary:hover{background:var(--ink2);transform:translateY(-2px);box-shadow:0 10px 28px rgba(10,22,40,.25)}
+
+.btn-ghost{
+  background:rgba(255,255,255,.5);backdrop-filter:blur(12px);
+  color:var(--ink);border:1px solid rgba(255,255,255,.8);
+  padding:.85rem 2rem;border-radius:100px;
+  font-size:.92rem;font-weight:400;
+  text-decoration:none;transition:all .22s;
+}
+.btn-ghost:hover{background:rgba(255,255,255,.75)}
+
+.scroll-hint{
+  position:absolute;bottom:3rem;left:50%;transform:translateX(-50%);
+  z-index:20;display:flex;flex-direction:column;align-items:center;gap:.4rem;
+  opacity:.45;animation:sh 2.8s ease-in-out infinite;
+}
+.scroll-hint span{font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink)}
+@keyframes sh{0%,100%{opacity:.45;transform:translateX(-50%) translateY(0)}50%{opacity:.25;transform:translateX(-50%) translateY(5px)}}
+
+/* ─── PRODUCT TEASE ─── */
+#product-tease{
+  background:var(--cream);
+  padding:5rem 2rem 0;
+  display:flex;justify-content:center;
+}
+.phone-wrap{
+  width:260px;
+  background:var(--white);
+  border-radius:44px;
+  box-shadow:0 40px 100px rgba(10,22,40,.14),0 8px 24px rgba(10,22,40,.08);
+  border:1px solid rgba(255,255,255,.9);
+  overflow:hidden;
+}
+.phone-bar{height:28px;background:var(--light);display:flex;align-items:center;justify-content:center}
+.phone-pill{width:80px;height:18px;background:#e0d8cc;border-radius:0 0 12px 12px}
+.phone-body{padding:1.3rem}
+.ph-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;color:var(--ink);margin-bottom:.2rem}
+.ph-loc{font-size:.68rem;color:var(--muted);margin-bottom:.9rem;display:flex;align-items:center;gap:.3rem}
+.ph-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-bottom:.85rem}
+.lk{background:var(--light);border-radius:10px;padding:8px 4px;text-align:center;border:1.5px solid transparent;transition:all .3s}
+.lk.free{border-color:rgba(10,22,40,.08)}
+.lk.occ{opacity:.45}
+.lk.sel{background:var(--sea);border-color:var(--sea)}
+.lk-n{font-family:'Syne',sans-serif;font-weight:800;font-size:12px;color:var(--ink);display:block}
+.lk.sel .lk-n{color:var(--white)}
+.lk-s{font-size:7px;color:#30d158;display:block;margin-top:1px}
+.lk.occ .lk-s{color:#ff3b30}
+.lk.sel .lk-s{color:rgba(255,255,255,.7)}
+.ph-row{background:var(--light);border-radius:12px;padding:.75rem 1rem;display:flex;justify-content:space-between;align-items:center;margin-bottom:.7rem}
+.ph-row-label{font-size:.7rem;color:var(--muted)}
+.ph-row-val{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;color:var(--sea)}
+.ph-pay{background:var(--coral);color:var(--white);border:none;width:100%;padding:.85rem;border-radius:12px;font-size:.88rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
+
+/* ─── STATS ─── */
+#stats{
+  display:flex;justify-content:center;
+  border-bottom:1px solid rgba(10,22,40,.07);
+  margin-top:4rem;
+}
+.stat{padding:2.2rem 3.5rem;text-align:center;border-right:1px solid rgba(10,22,40,.07);flex:1;max-width:200px}
+.stat:last-child{border-right:none}
+.stat-v{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;color:var(--sea);display:block;line-height:1}
+.stat-l{font-size:.75rem;color:var(--muted);margin-top:.3rem;line-height:1.4}
+
+/* ─── HOW ─── */
+#how{padding:8rem 2rem;max-width:1080px;margin:0 auto}
+.section-label{font-size:.72rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--coral);margin-bottom:1rem;display:block}
+.section-title{font-family:'Syne',sans-serif;font-size:clamp(2rem,4.5vw,3.4rem);font-weight:800;letter-spacing:-.03em;line-height:1.05;color:var(--ink);margin-bottom:4rem}
+.section-title em{font-style:normal;color:var(--sea)}
+
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.step{background:var(--white);border-radius:24px;padding:2.2rem;border:1px solid rgba(10,22,40,.06);box-shadow:0 2px 16px rgba(10,22,40,.04);transition:transform .3s,box-shadow .3s}
+.step:hover{transform:translateY(-5px);box-shadow:0 12px 40px rgba(10,22,40,.09)}
+.step-i{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:1.2rem}
+.i-sand{background:#fef3e2}
+.i-sea{background:#e0f4fc}
+.i-wave{background:#fdeee8}
+.step-num{font-family:'Syne',sans-serif;font-size:2.8rem;font-weight:800;color:rgba(10,22,40,.05);line-height:1;margin-bottom:.5rem}
+.step h3{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--ink);margin-bottom:.5rem;letter-spacing:-.01em}
+.step p{font-size:.88rem;color:var(--muted);line-height:1.7}
+
+/* ─── BORNE SHOWCASE (scroll story) ─── */
+#bornes-story{background:var(--sand);padding:8rem 0;overflow:hidden}
+.bs-inner{max-width:1080px;margin:0 auto;padding:0 2rem}
+.bs-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;margin-bottom:7rem}
+.bs-grid:nth-child(odd){direction:rtl}
+.bs-grid>*{direction:ltr}
+.bs-text{}
+.bs-visual{border-radius:28px;overflow:hidden;box-shadow:0 20px 60px rgba(10,22,40,.12)}
+
+/* ─── TARIFS ─── */
+#pricing{padding:8rem 2rem;max-width:1080px;margin:0 auto}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem}
+.pc{background:var(--white);border-radius:24px;padding:2rem;border:1px solid rgba(10,22,40,.07);box-shadow:0 2px 16px rgba(10,22,40,.04);transition:all .3s}
+.pc:hover{transform:translateY(-4px);box-shadow:0 14px 44px rgba(10,22,40,.1)}
+.pc.feat{background:var(--sea);border-color:var(--sea)}
+.pc-pill{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .75rem;border-radius:100px;display:inline-block;margin-bottom:1.2rem;background:rgba(232,96,58,.1);color:var(--coral)}
+.pc.feat .pc-pill{background:rgba(255,255,255,.15);color:rgba(255,255,255,.8)}
+.pc-name{font-size:.9rem;color:var(--muted);margin-bottom:.3rem}
+.pc.feat .pc-name{color:rgba(255,255,255,.65)}
+.pc-price{font-family:'Syne',sans-serif;font-size:2.8rem;font-weight:800;color:var(--ink);line-height:1}
+.pc-price span{font-size:1rem;font-weight:300;color:var(--muted);font-family:'Inter',sans-serif}
+.pc.feat .pc-price{color:var(--white)}
+.pc.feat .pc-price span{color:rgba(255,255,255,.55)}
+.pc-desc{font-size:.82rem;color:var(--muted);margin:.4rem 0 1.5rem}
+.pc.feat .pc-desc{color:rgba(255,255,255,.6)}
+.pc-list{list-style:none;display:flex;flex-direction:column;gap:.5rem}
+.pc-list li{font-size:.85rem;color:var(--muted);display:flex;align-items:center;gap:.5rem}
+.pc-list li::before{content:'✓';color:var(--sea);font-weight:700;font-size:.82rem;min-width:14px}
+.pc.feat .pc-list li{color:rgba(255,255,255,.7)}
+.pc.feat .pc-list li::before{color:rgba(255,255,255,.9)}
+
+/* ─── LOCATIONS ─── */
+#locations{background:var(--white);padding:8rem 2rem}
+.loc-inner{max-width:1080px;margin:0 auto}
+.locs{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-top:3rem}
+.loc{background:var(--cream);border-radius:18px;padding:1.4rem;border:1px solid rgba(10,22,40,.06);cursor:pointer;transition:all .28s}
+.loc:hover{transform:translateY(-4px);box-shadow:0 10px 30px rgba(10,22,40,.08);background:var(--white)}
+.loc.soon{opacity:.45;border-style:dashed}
+.loc-city{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:800;color:var(--ink);letter-spacing:-.01em;margin-bottom:.2rem}
+.loc-beach{font-size:.82rem;color:var(--muted);margin-bottom:1rem}
+.loc-meta{display:flex;justify-content:space-between;align-items:center;font-size:.75rem}
+.loc-ok{color:#30d158;display:flex;align-items:center;gap:4px}
+.gdot{width:5px;height:5px;background:#30d158;border-radius:50%;animation:ld 2s infinite}
+.loc-n{color:var(--muted)}
+
+/* ─── FOOTER ─── */
+footer{background:var(--ink);padding:3rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.f-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:var(--white);letter-spacing:-.02em}
+.f-logo b{color:var(--coral)}
+.f-links{display:flex;gap:1.8rem}
+.f-links a{font-size:.82rem;color:rgba(255,255,255,.4);text-decoration:none;transition:color .2s}
+.f-links a:hover{color:var(--white)}
+.f-copy{font-size:.75rem;color:rgba(255,255,255,.25)}
+
+/* ─── WAVE SEP ─── */
+.wsep{height:80px;overflow:hidden}
+.wsep svg{width:100%;display:block}
+
+/* ─── REVEAL ─── */
+.r{opacity:0;transform:translateY(24px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+.r.in{opacity:1;transform:none}
+.r.d1{transition-delay:.1s}.r.d2{transition-delay:.2s}.r.d3{transition-delay:.3s}
+
+/* responsive */
+@media(max-width:860px){
+  #nav{padding:0 1.5rem}
+  .nav-links a:not(.nav-cta){display:none}
+  .steps,.pricing-grid{grid-template-columns:1fr}
+  .bs-grid{grid-template-columns:1fr}
+  .bs-grid:nth-child(odd){direction:ltr}
+  #how,#bornes-story .bs-inner,#pricing,#locations{padding:4rem 1.5rem}
+  .stat{border-right:none;border-bottom:1px solid rgba(10,22,40,.07)}
+  #stats{flex-wrap:wrap}
+  footer{padding:2rem 1.5rem}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">Ka<b>zi</b></a>
+  <div class="nav-links">
+    <a href="#how">Comment ça marche</a>
+    <a href="#locations">Plages</a>
+    <a href="#pricing">Tarifs</a>
+    <a href="kazi-designs.html">Voir nos bornes</a>
+    <a href="kazi-partenaires.html" class="nav-cta">Partenaires →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <!-- SKY -->
+  <div class="pl pl-sky" id="l0"></div>
+  <!-- SUN -->
+  <div class="pl pl-sun" id="l1"><div class="sun-body"></div></div>
+  <!-- CLOUDS -->
+  <div class="pl pl-clouds" id="l2">
+    <div class="cl cl1"></div><div class="cl cl2"></div>
+    <div class="cl cl3"></div><div class="cl cl4"></div>
+  </div>
+  <!-- HORIZON SEA -->
+  <div class="pl pl-horizon" id="l3">
+    <svg viewBox="0 0 1440 150" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width:100%;display:block">
+      <rect x="0" y="30" width="1440" height="120" fill="#1d8db8"/>
+      <ellipse cx="720" cy="32" rx="900" ry="16" fill="rgba(255,255,255,.16)"/>
+      <path d="M0,32 Q360,18 720,32 Q1080,46 1440,32 L1440,52 Q1080,66 720,52 Q360,38 0,52Z" fill="#1578a0" opacity=".5"/>
+    </svg>
+  </div>
+  <!-- MID SEA -->
+  <div class="pl pl-sea" id="l4">
+    <svg viewBox="0 0 1440 180" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width:100%;display:block">
+      <path d="M0,50 C240,22 480,68 720,44 C960,20 1200,60 1440,40 L1440,180 L0,180Z" fill="#1a8fc1"/>
+      <path d="M0,70 C300,48 600,80 900,62 C1100,50 1320,70 1440,64 L1440,88 C1320,82 1100,68 900,76 C600,88 300,66 0,84Z" fill="rgba(255,255,255,.1)"/>
+    </svg>
+  </div>
+  <!-- WAVES -->
+  <div class="pl pl-waves" id="l5">
+    <svg viewBox="0 0 1440 110" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width:100%;display:block">
+      <path id="w1" d="M0,44 C240,18 480,62 720,40 C960,18 1200,58 1440,36 L1440,110 L0,110Z" fill="#32aed4" opacity=".65"/>
+      <path id="w2" d="M0,58 C200,36 400,70 600,52 C800,34 1000,68 1200,50 C1320,40 1400,56 1440,52 L1440,110 L0,110Z" fill="#4ec8e8" opacity=".7"/>
+      <path id="w3" d="M0,72 C180,60 360,80 540,68 C720,56 900,76 1080,64 C1260,52 1380,70 1440,66 L1440,80 C1380,76 1260,64 1080,70 C900,76 720,64 540,74 C360,84 180,70 0,78Z" fill="rgba(255,255,255,.55)"/>
+    </svg>
+  </div>
+  <!-- SAND -->
+  <div class="pl pl-sand" id="l6">
+    <svg viewBox="0 0 1440 190" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width:100%;display:block">
+      <path d="M0,55 C360,26 720,68 1080,42 C1260,28 1380,52 1440,46 L1440,190 L0,190Z" fill="#f0d9b5"/>
+      <path d="M0,57 C360,28 720,70 1080,44 C1260,30 1380,54 1440,48 L1440,72 C1380,68 1260,48 1080,58 C720,82 360,50 0,70Z" fill="#f5e6c8" opacity=".7"/>
+      <!-- Umbrella right -->
+      <g transform="translate(1200,26)">
+        <path d="M22,74 L22,0 Q46,-18 70,0 Q46,16 22,0Z" fill="#e8603a"/>
+        <path d="M22,0 Q46,16 22,32 Q-2,16 22,0Z" fill="#f08060"/>
+        <line x1="22" y1="0" x2="22" y2="80" stroke="#c8a458" stroke-width="2.5"/>
+      </g>
+      <!-- Umbrella left -->
+      <g transform="translate(60,38)">
+        <path d="M18,66 L18,0 Q38,-14 58,0 Q38,14 18,0Z" fill="#1a8fc1"/>
+        <path d="M18,0 Q38,14 18,28 Q-2,14 18,0Z" fill="#2ea8d8"/>
+        <line x1="18" y1="0" x2="18" y2="72" stroke="#c8a458" stroke-width="2"/>
+      </g>
+      <!-- Shell deco -->
+      <ellipse cx="720" cy="80" rx="8" ry="5" fill="#f0c898" stroke="#e0a870" stroke-width=".8" opacity=".7"/>
+      <ellipse cx="340" cy="90" rx="6" ry="3.5" fill="#f5d5b5" stroke="#e0b070" stroke-width=".7" opacity=".6"/>
+      <ellipse cx="1050" cy="85" rx="7" ry="4" fill="#f0c898" stroke="#e0a870" stroke-width=".7" opacity=".6"/>
+    </svg>
+  </div>
+
+  <!-- TEXT -->
+  <div class="hero-text">
+    <div class="hero-eyebrow"><span class="ldot"></span>Été 2026 · Marseille</div>
+    <h1 class="hero-h">Posez vos<br>affaires.<br><em>Profitez.</em></h1>
+    <p class="hero-sub">Des casiers connectés sur les plus belles plages de Méditerranée. Paiement en 10 secondes.</p>
+    <div class="hero-actions">
+      <a href="#locations" class="btn-primary">Trouver un Kazi</a>
+      <a href="#how" class="btn-ghost">Comment ça marche</a>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Défiler</span>
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 9l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+</section>
+
+<!-- PRODUCT TEASE -->
+<section id="product-tease">
+  <div class="phone-wrap r">
+    <div class="phone-bar"><div class="phone-pill"></div></div>
+    <div class="phone-body">
+      <div class="ph-logo">Kazi</div>
+      <div class="ph-loc">📍 Plage du Prado, Marseille</div>
+      <div class="ph-grid">
+        <div class="lk occ"><span class="lk-n">01</span><span class="lk-s">Occupé</span></div>
+        <div class="lk sel"><span class="lk-n">02</span><span class="lk-s">Sélect.</span></div>
+        <div class="lk free"><span class="lk-n">03</span><span class="lk-s">Libre</span></div>
+        <div class="lk free"><span class="lk-n">04</span><span class="lk-s">Libre</span></div>
+        <div class="lk occ"><span class="lk-n">05</span><span class="lk-s">Occupé</span></div>
+        <div class="lk free"><span class="lk-n">06</span><span class="lk-s">Libre</span></div>
+      </div>
+      <div class="ph-row">
+        <div class="ph-row-label">2h · Casier #02</div>
+        <div class="ph-row-val">4,00 €</div>
+      </div>
+      <button class="ph-pay">Payer et ouvrir →</button>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div id="stats">
+  <div class="stat r"><span class="stat-v">20 s</span><span class="stat-l">pour louer<br>un casier</span></div>
+  <div class="stat r d1"><span class="stat-v">0 €</span><span class="stat-l">d'appli<br>à télécharger</span></div>
+  <div class="stat r d2"><span class="stat-v">2 €/h</span><span class="stat-l">tarif<br>de base</span></div>
+  <div class="stat r d3"><span class="stat-v">24/7</span><span class="stat-l">accès à vos<br>affaires</span></div>
+</div>
+
+<!-- HOW -->
+<section id="how">
+  <span class="section-label r">Comment ça marche</span>
+  <h2 class="section-title r d1">Trois gestes.<br><em>La mer, enfin libre.</em></h2>
+  <div class="steps">
+    <div class="step r d1">
+      <div class="step-num">01</div>
+      <div class="step-i i-sand">📱</div>
+      <h3>Scanne le QR code</h3>
+      <p>Sur la borne, scanne avec ton téléphone. Aucune appli. La page s'ouvre en 2 secondes.</p>
+    </div>
+    <div class="step r d2">
+      <div class="step-num">02</div>
+      <div class="step-i i-sea">💳</div>
+      <h3>Paye en 10 secondes</h3>
+      <p>Choisis ta durée. Paye par CB, Apple Pay ou Google Pay. Le casier s'ouvre. Code SMS reçu.</p>
+    </div>
+    <div class="step r d3">
+      <div class="step-num">03</div>
+      <div class="step-i i-wave">🌊</div>
+      <h3>Nage. Bronze. Profite.</h3>
+      <p>Tes affaires sont en sécurité. Reviens avec ton code SMS quand tu veux.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WAVE SEP -->
+<div class="wsep" style="background:var(--cream)">
+  <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,40 C480,80 960,0 1440,50 L1440,80 L0,80Z" fill="var(--sand)"/>
+  </svg>
+</div>
+
+<!-- BORNES STORY -->
+<section id="bornes-story">
+  <div class="bs-inner">
+    <span class="section-label r">Nos bornes</span>
+    <h2 class="section-title r d1">Conçues pour<br><em>s'effacer</em> dans le décor.</h2>
+
+    <!-- Story 1 -->
+    <div class="bs-grid">
+      <div class="bs-text r">
+        <h3 style="font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;letter-spacing:-.02em;color:var(--ink);margin-bottom:.8rem">Bois flotté &amp; sable naturel</h3>
+        <p style="font-size:.95rem;color:var(--muted);line-height:1.8;margin-bottom:1.2rem">Sur les plages naturelles, la borne disparaît dans le paysage. Inox sablé, teintes driftwood, intégration totale. La nature d'abord.</p>
+        <a href="kazi-designs.html" style="font-size:.88rem;color:var(--coral);font-weight:500;text-decoration:none">Voir les designs →</a>
+      </div>
+      <div class="bs-visual r d1">
+        <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+          <defs>
+            <linearGradient id="sc1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#a8d8f0"/>
+              <stop offset="50%" stop-color="#1a8fc1"/>
+              <stop offset="72%" stop-color="#f0d9b5"/>
+              <stop offset="100%" stop-color="#e0c48a"/>
+            </linearGradient>
+            <linearGradient id="bw" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#c8b890"/>
+              <stop offset="100%" stop-color="#a89068"/>
+            </linearGradient>
+          </defs>
+          <rect width="400" height="300" fill="url(#sc1)" rx="8"/>
+          <!-- Mer -->
+          <path d="M0,145 Q100,130 200,145 Q300,160 400,145 L400,200 Q300,185 200,200 Q100,215 0,200Z" fill="#1578a0" opacity=".5"/>
+          <!-- Sable -->
+          <path d="M0,165 C130,145 260,175 400,158 L400,300 L0,300Z" fill="#f0d9b5"/>
+          <path d="M0,168 C130,148 260,178 400,161 L400,185 C260,190 130,162 0,178Z" fill="#f5e6c8" opacity=".6"/>
+          <!-- Borne bois flotté -->
+          <rect x="155" y="95" width="90" height="200" rx="10" fill="url(#bw)" stroke="#907850" stroke-width="1.5"/>
+          <!-- Texture bois horizontal -->
+          <line x1="155" y1="115" x2="245" y2="115" stroke="rgba(255,255,255,.12)" stroke-width="1"/>
+          <line x1="155" y1="130" x2="245" y2="130" stroke="rgba(0,0,0,.08)" stroke-width="1"/>
+          <line x1="155" y1="148" x2="245" y2="148" stroke="rgba(255,255,255,.1)" stroke-width=".8"/>
+          <line x1="155" y1="165" x2="245" y2="165" stroke="rgba(0,0,0,.07)" stroke-width=".8"/>
+          <!-- Toit -->
+          <polygon points="148,95 252,95 244,68 156,68" fill="#b8a070" stroke="#907850" stroke-width="1"/>
+          <!-- Solaire -->
+          <rect x="162" y="72" width="18" height="13" rx="1.5" fill="#ffe044" opacity=".8"/>
+          <rect x="184" y="72" width="18" height="13" rx="1.5" fill="#ffe044" opacity=".8"/>
+          <rect x="206" y="72" width="18" height="13" rx="1.5" fill="#ffe044" opacity=".8"/>
+          <rect x="228" y="72" width="13" height="13" rx="1.5" fill="#ffe044" opacity=".8"/>
+          <!-- Écran -->
+          <rect x="165" y="108" width="70" height="46" rx="6" fill="#0a2a3a" opacity=".9"/>
+          <text x="200" y="124" text-anchor="middle" font-family="Georgia" font-weight="700" font-size="10" fill="#ffe044">Kazi</text>
+          <rect x="172" y="130" width="20" height="20" rx="2" fill="white" opacity=".9"/>
+          <rect x="175" y="133" width="6" height="6" rx=".5" fill="#0a2a3a"/>
+          <rect x="183" y="133" width="6" height="6" rx=".5" fill="#0a2a3a"/>
+          <rect x="175" y="142" width="6" height="6" rx=".5" fill="#0a2a3a"/>
+          <rect x="182" y="139" width="3" height="3" fill="#0a2a3a"/>
+          <!-- Casiers -->
+          <rect x="162" y="164" width="32" height="30" rx="4" fill="#d4b880" stroke="#b09050" stroke-width="1"/>
+          <text x="178" y="175" text-anchor="middle" font-family="Georgia" font-size="8" font-weight="700" fill="#0a2a3a">01</text>
+          <circle cx="178" cy="186" r="3" fill="none" stroke="#30d158" stroke-width="1.2"/>
+          <rect x="198" y="164" width="32" height="30" rx="4" fill="#d4b880" stroke="#b09050" stroke-width="1"/>
+          <text x="214" y="175" text-anchor="middle" font-family="Georgia" font-size="8" font-weight="700" fill="#0a2a3a">02</text>
+          <circle cx="214" cy="186" r="3" fill="none" stroke="#ff4040" stroke-width="1.2"/>
+          <rect x="162" y="200" width="32" height="30" rx="4" fill="#d4b880" stroke="#b09050" stroke-width="1"/>
+          <text x="178" y="211" text-anchor="middle" font-family="Georgia" font-size="8" font-weight="700" fill="#0a2a3a">03</text>
+          <circle cx="178" cy="222" r="3" fill="none" stroke="#30d158" stroke-width="1.2"/>
+          <rect x="198" y="200" width="32" height="30" rx="4" fill="#d4b880" stroke="#b09050" stroke-width="1"/>
+          <text x="214" y="211" text-anchor="middle" font-family="Georgia" font-size="8" font-weight="700" fill="#0a2a3a">04</text>
+          <circle cx="214" cy="222" r="3" fill="none" stroke="#30d158" stroke-width="1.2"/>
+          <!-- Végétation plage -->
+          <ellipse cx="120" cy="200" rx="6" ry="16" transform="rotate(-12,120,200)" fill="#7aaa44" opacity=".7"/>
+          <ellipse cx="128" cy="196" rx="5" ry="13" transform="rotate(8,128,196)" fill="#8bbb55" opacity=".6"/>
+          <ellipse cx="280" cy="205" rx="5" ry="14" transform="rotate(10,280,205)" fill="#7aaa44" opacity=".65"/>
+          <!-- Ombre borne -->
+          <ellipse cx="200" cy="296" rx="45" ry="8" fill="rgba(0,0,0,.1)"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Story 2 -->
+    <div class="bs-grid">
+      <div class="bs-text r">
+        <h3 style="font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;letter-spacing:-.02em;color:var(--ink);margin-bottom:.8rem">Restauration de plage</h3>
+        <p style="font-size:.95rem;color:var(--muted);line-height:1.8;margin-bottom:1.2rem">Chez vos restaurants partenaires, la borne adopte leur identité. Teintes sombres, acier brossé, finitions premium. Un service qui valorise l'établissement.</p>
+        <a href="kazi-designs.html" style="font-size:.88rem;color:var(--coral);font-weight:500;text-decoration:none">Voir les designs →</a>
+      </div>
+      <div class="bs-visual r d1">
+        <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+          <defs>
+            <linearGradient id="sc2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#1a2030"/>
+              <stop offset="40%" stop-color="#2a3545"/>
+              <stop offset="100%" stop-color="#1a2030"/>
+            </linearGradient>
+            <linearGradient id="brest" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#3a3028"/>
+              <stop offset="100%" stop-color="#2a2018"/>
+            </linearGradient>
+          </defs>
+          <rect width="400" height="300" fill="url(#sc2)" rx="8"/>
+          <!-- Restaurant ambiance lights -->
+          <circle cx="80" cy="30" r="15" fill="rgba(255,200,80,.12)"/>
+          <circle cx="200" cy="20" r="20" fill="rgba(255,200,80,.1)"/>
+          <circle cx="320" cy="30" r="15" fill="rgba(255,200,80,.12)"/>
+          <!-- Hanging lights -->
+          <line x1="80" y1="0" x2="80" y2="30" stroke="#c8a050" stroke-width=".8"/>
+          <circle cx="80" cy="32" r="4" fill="#ffe080"/>
+          <line x1="200" y1="0" x2="200" y2="22" stroke="#c8a050" stroke-width=".8"/>
+          <circle cx="200" cy="24" r="5" fill="#ffe080"/>
+          <line x1="320" y1="0" x2="320" y2="30" stroke="#c8a050" stroke-width=".8"/>
+          <circle cx="320" cy="32" r="4" fill="#ffe080"/>
+          <!-- Floor tiles -->
+          <rect x="0" y="240" width="400" height="60" fill="#2a2a2a"/>
+          <line x1="0" y1="260" x2="400" y2="260" stroke="rgba(255,255,255,.06)" stroke-width=".5"/>
+          <!-- Borne restaurant -->
+          <rect x="150" y="80" width="100" height="200" rx="8" fill="url(#brest)" stroke="#5a4030" stroke-width="1.5"/>
+          <!-- Bande laiton haut -->
+          <rect x="150" y="80" width="100" height="5" rx="2" fill="#c8a050"/>
+          <!-- Bande laiton bas -->
+          <rect x="150" y="272" width="100" height="5" rx="2" fill="#c8a050"/>
+          <!-- Logo restaurant -->
+          <rect x="158" y="92" width="84" height="50" rx="5" fill="#1a1208"/>
+          <text x="200" y="108" text-anchor="middle" font-family="Georgia" font-style="italic" font-size="8" fill="#c8a050" opacity=".6">Restaurant</text>
+          <text x="200" y="120" text-anchor="middle" font-family="Georgia" font-weight="700" font-size="11" fill="#ffe080">Kazi</text>
+          <rect x="172" y="128" width="20" height="20" rx="2" fill="#c8a050" opacity=".9"/>
+          <rect x="175" y="131" width="6" height="6" rx=".5" fill="#1a1208"/>
+          <rect x="183" y="131" width="6" height="6" rx=".5" fill="#1a1208"/>
+          <rect x="175" y="140" width="6" height="6" rx=".5" fill="#1a1208"/>
+          <rect x="182" y="137" width="3" height="3" fill="#1a1208"/>
+          <text x="218" y="138" font-family="Arial" font-size="6" fill="#c8a050" opacity=".7">Scannez</text>
+          <!-- Casiers -->
+          <rect x="157" y="155" width="36" height="32" rx="4" fill="#2a2018" stroke="#5a4030" stroke-width="1"/>
+          <rect x="157" y="155" width="36" height="3" rx="1" fill="#c8a050" opacity=".5"/>
+          <text x="175" y="168" text-anchor="middle" font-family="Georgia" font-size="8" font-weight="700" fill="#c8a050">01</text>
+          <circle cx="175" cy="178" r="3" fill="none" stroke="#30d158" stroke-width="1.2"/>
+          <rect x="198" y="155" width="36" height="32" rx="4" fill="#2a2018" stroke="#5a4030" stroke-width="1"/>
+          <rect x="198" y="155" width="36" height="3" rx="1" fill="#c8a050" opacity=".5"/>
+          <text x="216" y="168" text-anchor="middle" font-family="Georgia" font-size="8" font-weight="700" fill="#c8a050">02</text>
+          <circle cx="216" cy="178" r="3" fill="none" stroke="#c8a050" stroke-width="1.2"/>
+          <rect x="157" y="193" width="36" height="32" rx="4" fill="#2a2018" stroke="#5a4030" stroke-width="1"/>
+          <rect x="157" y="193" width="36" height="3" rx="1" fill="#c8a050" opacity=".5"/>
+          <text x="175" y="206" text-anchor="middle" font-family="Georgia" font-size="8" font-weight="700" fill="#c8a050">03</text>
+          <circle cx="175" cy="216" r="3" fill="none" stroke="#30d158" stroke-width="1.2"/>
+          <rect x="198" y="193" width="36" height="32" rx="4" fill="#2a2018" stroke="#5a4030" stroke-width="1"/>
+          <rect x="198" y="193" width="36" height="3" rx="1" fill="#c8a050" opacity=".5"/>
+          <text x="216" y="206" text-anchor="middle" font-family="Georgia" font-size="8" font-weight="700" fill="#c8a050">04</text>
+          <circle cx="216" cy="216" r="3" fill="none" stroke="#30d158" stroke-width="1.2"/>
+          <!-- Pied laiton -->
+          <rect x="170" y="280" width="60" height="10" rx="4" fill="#c8a050"/>
+          <rect x="165" y="287" width="70" height="6" rx="3" fill="#a88030"/>
+          <!-- Ombre douce -->
+          <ellipse cx="200" cy="295" rx="48" ry="6" fill="rgba(0,0,0,.25)"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WAVE SEP -->
+<div class="wsep" style="background:var(--sand)">
+  <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,30 C360,75 720,5 1080,45 C1260,65 1380,35 1440,42 L1440,80 L0,80Z" fill="var(--white)"/>
+  </svg>
+</div>
+
+<!-- LOCATIONS -->
+<section id="locations">
+  <div class="loc-inner">
+    <span class="section-label r">Où nous trouver</span>
+    <h2 class="section-title r d1">Les plus belles plages<br><em>de Méditerranée.</em></h2>
+    <div class="locs">
+      <div class="loc r d1"><div class="loc-city">Marseille</div><div class="loc-beach">Plage du Prado · Prophète</div><div class="loc-meta"><span class="loc-ok"><span class="gdot"></span>14 libres</span><span class="loc-n">20 bornes</span></div></div>
+      <div class="loc r d2"><div class="loc-city">Cassis</div><div class="loc-beach">Calanque de Port-Pin</div><div class="loc-meta"><span class="loc-ok"><span class="gdot"></span>8 libres</span><span class="loc-n">10 bornes</span></div></div>
+      <div class="loc r d3"><div class="loc-city">Nice</div><div class="loc-beach">Promenade des Anglais</div><div class="loc-meta"><span class="loc-ok"><span class="gdot"></span>22 libres</span><span class="loc-n">30 bornes</span></div></div>
+      <div class="loc r d1"><div class="loc-city">Montpellier</div><div class="loc-beach">Plage de l'Espiguette</div><div class="loc-meta"><span class="loc-ok"><span class="gdot"></span>6 libres</span><span class="loc-n">8 bornes</span></div></div>
+      <div class="loc soon r d2"><div class="loc-city">Barcelone</div><div class="loc-beach">Barceloneta · Bientôt</div><div class="loc-meta"><span style="font-size:.75rem;color:var(--muted)">Été 2027</span></div></div>
+      <div class="loc soon r d3"><div class="loc-city">Rome</div><div class="loc-beach">Ostia · Bientôt</div><div class="loc-meta"><span style="font-size:.75rem;color:var(--muted)">Été 2027</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- WAVE SEP -->
+<div class="wsep" style="background:var(--white)">
+  <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,50 C480,10 960,70 1440,30 L1440,80 L0,80Z" fill="var(--sand)"/>
+  </svg>
+</div>
+
+<!-- PRICING -->
+<section id="pricing" style="background:var(--sand);padding-top:8rem;padding-bottom:8rem">
+  <div style="max-width:1080px;margin:0 auto;padding:0 2rem">
+    <span class="section-label r">Tarifs</span>
+    <h2 class="section-title r d1">Simple.<br><em>Transparent.</em></h2>
+  </div>
+  <div class="pricing-grid" style="max-width:1080px;margin:3rem auto 0;padding:0 2rem">
+    <div class="pc r d1">
+      <div class="pc-name">Rapide</div>
+      <div class="pc-price">2€<span> / h</span></div>
+      <div class="pc-desc">Pour un bain ou une balade</div>
+      <ul class="pc-list">
+        <li>Casier taille standard</li>
+        <li>Ouverture par QR code SMS</li>
+        <li>CB / Apple Pay</li>
+      </ul>
+    </div>
+    <div class="pc feat r d2">
+      <span class="pc-pill">⭐ Plus populaire</span>
+      <div class="pc-name">Journée</div>
+      <div class="pc-price">12€<span> / jour</span></div>
+      <div class="pc-desc">Profitez sans compter</div>
+      <ul class="pc-list">
+        <li>Accès illimité dans la journée</li>
+        <li>Rappel SMS 30 min avant</li>
+        <li>Extension jusqu'à minuit</li>
+        <li>Recharge téléphone +1€</li>
+        <li>CB / Apple Pay / Google Pay</li>
+      </ul>
+    </div>
+    <div class="pc r d3">
+      <div class="pc-name">Grand format</div>
+      <div class="pc-price">3€<span> / h</span></div>
+      <div class="pc-desc">Valises et équipement</div>
+      <ul class="pc-list">
+        <li>Casier XL (valise cabine)</li>
+        <li>Idéal familles et groupes</li>
+        <li>CB / Apple Pay</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- WAVE SEP -->
+<div class="wsep" style="background:var(--sand)">
+  <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,20 C360,68 720,8 1080,55 C1260,74 1380,38 1440,48 L1440,80 L0,80Z" fill="var(--ink)"/>
+  </svg>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="f-logo">Ka<b>zi</b></div>
+  <div class="f-links">
+    <a href="kazi-partenaires.html">Partenaires</a>
+    <a href="#">Mentions légales</a>
+    <a href="#">Contact</a>
+  </div>
+  <div class="f-copy">© 2026 Kazi · Marseille</div>
+</footer>
+
+<script>
+// Parallax
+const layers=[
+  {el:document.getElementById('l0'),s:.06},
+  {el:document.getElementById('l1'),s:.10},
+  {el:document.getElementById('l2'),s:.16},
+  {el:document.getElementById('l3'),s:.26},
+  {el:document.getElementById('l4'),s:.38},
+  {el:document.getElementById('l5'),s:.50},
+  {el:document.getElementById('l6'),s:.64},
+];
+let tick=false;
+function par(){
+  const y=window.scrollY;
+  layers.forEach(({el,s})=>{ el.style.transform=`translate3d(0,${y*s}px,0)` });
+  tick=false;
+}
+window.addEventListener('scroll',()=>{if(!tick){requestAnimationFrame(par);tick=true}},{passive:true});
+
+// Wave animation
+const w1=document.getElementById('w1'),w2=document.getElementById('w2'),w3=document.getElementById('w3');
+let t=0;
+function wave(){
+  t+=.011;
+  const s=(t,a,f,p,y,yb)=>{
+    let d=`M0,${y}`;
+    for(let i=0;i<=12;i++){
+      const x=i/12*1440;
+      const yy=y+Math.sin(i/12*f*Math.PI*2+p+t)*a;
+      d+=` C${x-55},${yy} ${x-55},${yy} ${x},${yy}`;
+    }
+    return d+` L1440,${yb} L0,${yb}Z`;
+  };
+  if(w1)w1.setAttribute('d',s(t,13,1.2,0,44,110));
+  if(w2)w2.setAttribute('d',s(t,9,1.5,1.3,58,110));
+  if(w3)w3.setAttribute('d',s(t,6,2,2.5,72,84));
+  requestAnimationFrame(wave);
+}
+wave();
+
+// Nav
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('solid',window.scrollY>60),{passive:true});
+
+// Reveal
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target)}})
+},{threshold:.1,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.r').forEach(el=>obs.observe(el));
+
+// Phone locker anim
+const lks=document.querySelectorAll('.lk');
+const frees=Array.from(lks).filter(l=>l.classList.contains('free'));
+let cur=null;
+setInterval(()=>{
+  if(cur){cur.classList.remove('sel');cur.classList.add('free')}
+  if(!frees.length)return;
+  const p=frees[Math.floor(Math.random()*frees.length)];
+  p.classList.remove('free');p.classList.add('sel');cur=p;
+},2500);
+</script>
+</body>
+</html>
